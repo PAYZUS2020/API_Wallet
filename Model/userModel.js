@@ -62,6 +62,10 @@ const userSchema = new mongoose.Schema({
     kyc:{
         type:Boolean,
         default:false
+    },
+    verified:{
+        type:Boolean,
+        default:false
     }
 })
 

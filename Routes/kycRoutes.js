@@ -127,6 +127,7 @@ router.post('/approve', bodyParser, async (req, res) => {
     {
       const userRef=result3[0];
       userRef.referralCount = userRef.referralCount + 1;
+      userRef.referralCountEarned = userRef.referralCountEarned + 1000;
       userRef.refferedTo.push({"name":result2[0].name,"email":result2[0].email});
       userRef.totalEarning = userRef.totalEarning + 1000;
       userRef.save().then((result) => {
@@ -136,6 +137,42 @@ router.post('/approve', bodyParser, async (req, res) => {
     }
     else{
       res.json({ status: 1, message: "" })
+    }
+    
+
+    
+    
+  } catch (e) {
+    res.json({ status: 0, message: e })
+  }
+})
+
+
+
+router.post('/send', bodyParser, async (req, res) => {
+  try {
+    var tot2 = await User.find()
+    var id = req.body.id;
+
+    const result2 = tot2.filter((user) => {
+      return id === user._id
+    })
+
+
+    var address1 = result2[0].address;
+
+    const result3 = tot2.filter((user) => {
+      return result2[0].refferedByEmail === user.email
+    })
+
+    if(result3.length===1)
+    {
+      var address2=result3[0].address;
+      console.log(address2)
+      res.json({ status: 1, addressUser:address1, addressRefferal:address2 })
+    }
+    else{
+      res.json({ status: 1, addressUser:address1, addressRefferal:"" })
     }
     
 

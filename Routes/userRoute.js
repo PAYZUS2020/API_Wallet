@@ -76,7 +76,7 @@ router.post('/signup', bodyParser, async (req, res) => {
     })
 
     if (result2.length === 0) {
-      if (req.body.refferal !== undefined) {
+      if (req.body.refferal !== "") {
         const result1 = tot.filter((user) => {
           return req.body.refferal === user.email
         })
@@ -119,7 +119,9 @@ router.post('/signup', bodyParser, async (req, res) => {
         } else {
           res.json({ status: 0, message: 'Invalid Refferal' })
         }
-      } else {
+      } 
+      else 
+      {
         var a = Key.generateMnemonic()
         var b = Key.generatePrivKey(a)
         var c = Key.derivePubKey(b)
@@ -167,17 +169,13 @@ router.post('/login', bodyParser, async (req, res) => {
 
     if (result2.length === 1) {
       var email = req.body.email
-      var password = req.body.password
-      
-      // MESSAGE DIGEST the Password with Email     
-      const hashDigest = getHash(password, email)
-      console.log(result2[0].password)
+      result2[0].verified=true
 
-      if (hashDigest.localeCompare(result2[0].password) === 0) {
+      result2[0].save().then((result) => {
         res.json({ status: 1, message: 'User Logged In', result: result2 })
-      } else {
-        res.json({ status: 0, message: 'Username/Password is Invalid' })
-      }
+      })
+
+      
     } else {
       res.json({ status: 0, message: 'User Not Registered' })
     }
